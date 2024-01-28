@@ -1257,6 +1257,596 @@ void playCarStack()
     }
 }
 
+// Search Tree
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <math.h>
+#define p printf
+#define s scanf
+#define g gotoxy
+
+typedef struct STCoords
+{
+    int x;
+    int y;
+} STCoords;
+
+typedef struct STNode
+{
+    int value;
+    int depth;
+    struct STNode *left;
+    struct STNode *right;
+    struct STCoords coords;
+} STNode;
+
+struct Tree
+{
+    struct STNode *root;
+};
+
+typedef struct STQueue
+{
+    STNode *node;
+    struct STQueue *next;
+} STQueue;
+
+void STtypeOnScreen(int message, int x, int y)
+{
+    g(x, y);
+    p("%i", message);
+}
+
+void STenqueue(STQueue *queue, STNode *node)
+{
+    STQueue *currentQueue = queue;
+    STQueue *newQueue = (STQueue *)malloc(sizeof(STQueue));
+
+    while (currentQueue->next != NULL)
+    {
+        currentQueue = currentQueue->next;
+    }
+
+    newQueue->node = node;
+    newQueue->next = NULL;
+    currentQueue->next = newQueue;
+}
+
+STNode *STdequeue(STQueue *queue)
+{
+    STNode *tempNode;
+    STQueue *tempQueue;
+
+    if (queue->node == NULL)
+    {
+        return NULL;
+    }
+
+    tempNode = queue->node;
+    tempQueue = queue->next;
+
+    if (tempQueue != NULL)
+    {
+        queue->node = tempQueue->node;
+        queue->next = tempQueue->next;
+        free(tempQueue);
+    }
+    else
+    {
+        queue->node = NULL;
+    }
+
+    return tempNode;
+}
+
+void printTree(struct Tree *tree)
+{
+    int nodeNum;
+    struct STQueue *queue = (STQueue *)malloc(sizeof(STQueue));
+    // printf("Trying to print tree...");
+    queue->node = tree->root;
+    queue->next = NULL;
+    while (queue->node != NULL)
+    {
+        STNode *node = queue->node;
+        STtypeOnScreen(node->value, node->coords.x, node->coords.y);
+        if (node->left != NULL)
+        {
+            STenqueue(queue, node->left);
+        }
+        if (node->right != NULL)
+        {
+            STenqueue(queue, node->right);
+        }
+        STdequeue(queue);
+        nodeNum++;
+    }
+}
+
+void appendToTree(struct Tree *tree, int number)
+{
+    struct STNode **currentNode = &(tree->root);
+    int unsolved = 1;
+    int width = 50;
+
+    while (unsolved)
+    {
+        int depth = (*currentNode)->depth + 1;
+        struct STNode *parent = (*currentNode);
+        if (number > (*currentNode)->value)
+        {
+            currentNode = &((*currentNode)->right);
+        }
+        else
+        {
+            currentNode = &((*currentNode)->left);
+        }
+
+        if (*currentNode == NULL)
+        {
+            *currentNode = malloc(sizeof(struct STNode));
+            (*currentNode)->value = number;
+            (*currentNode)->left = NULL;
+            (*currentNode)->right = NULL;
+            (*currentNode)->depth = depth;
+            (*currentNode)->coords.x = parent->coords.x + (number > parent->value ? width / pow(2, depth) : -width / pow(2, depth));
+            (*currentNode)->coords.y = parent->coords.y + 5;
+            unsolved = 0;
+        }
+    }
+}
+
+void fillNumbers(struct Tree *tree, int numberCount)
+{
+    int i;
+    for (i = 0; i < numberCount; i++)
+    {
+
+        int number;
+        printf("Input #%i: ", i + 1);
+        scanf("%i", &number);
+        appendToTree(tree, number);
+    }
+}
+
+void searchTree()
+
+{
+    int numberCount;
+    struct STNode root;
+    struct Tree binaryTree;
+    clrscr();
+    printf("How many numbers will you input?\n");
+    scanf("%i", &numberCount);
+    printf("Enter value of root node\n");
+    scanf("%i", &root.value);
+    // root.value = 7;
+    binaryTree.root = &root;
+    root.left = NULL;
+    root.right = NULL;
+    root.coords.x = 40;
+    root.coords.y = 5;
+    root.depth = 1;
+    fillNumbers(&binaryTree, numberCount);
+    printTree(&binaryTree);
+    getch();
+}
+
+// Fibo
+long long fibonacci(long long order)
+{
+    if (order == 0 || order == 1)
+    {
+        return order;
+    }
+    else
+    {
+        return fibonacci(order - 1) + fibonacci(order - 2);
+    }
+}
+
+int fibo()
+{
+
+    long long input;
+    long long i;
+    int state = 1;
+
+    while (state)
+    {
+        clrscr();
+        g(10, 10);
+        printf("Type in a number, receive fibonacci counterpart\n");
+        g(10, 12);
+        s("%llu", &input);
+        g(10, 15);
+        for (i = 0; i < input; i++)
+        {
+            printf("%llu, ", fibonacci(i));
+        }
+        g(10, 25);
+        printf("Press 'F' to quit; press any other key to continue");
+        if (getch() == 'F' || getch() == 'f')
+        {
+            state = 0;
+        }
+        return 0;
+    }
+}
+// Tower of hanoi
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+
+#define p printf
+#define g gotoxy
+#define GREEN 2
+#define RED 4
+#define BLUE 1
+#define YELLOW 14
+#define MAGENTA 5
+
+struct Disk
+{
+    int length;
+    int colorCode;
+};
+
+struct Rod
+{
+    struct HStack *stack;
+    int id;
+};
+
+struct HCoords
+{
+    int x;
+    int y;
+};
+
+typedef struct HStack
+{
+    int top;
+    struct Disk *array;
+} HStack;
+
+void HPush(HStack *stack, struct Disk item)
+{
+    stack->array[++stack->top] = item;
+}
+
+struct Disk HPop(HStack *stack)
+{
+    return stack->array[stack->top--];
+}
+
+struct Rod *createThreeRods(int diskCount)
+{
+    int i;
+    struct Rod *rods = malloc(3 * sizeof(struct Rod));
+    if (rods == NULL)
+    {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    for (i = 0; i < 3; i++)
+    {
+        struct HStack *initialStack = malloc(sizeof(struct HStack));
+        if (initialStack == NULL)
+        {
+            printf("Memory allocation failed\n");
+            exit(1);
+        }
+        initialStack->top = -1;
+        initialStack->array = malloc(sizeof(struct Disk) * diskCount);
+        if (initialStack->array == NULL)
+        {
+            printf("Memory allocation failed\n");
+            exit(1);
+        }
+        rods[i].stack = initialStack;
+        rods[i].id = i + 1;
+    }
+    return rods;
+}
+
+void HDrawBlockOnScreen(x, y)
+{
+    g(x, y);
+    p("%c", 219);
+}
+
+void HDrawCBlockOnScreen(x, y)
+{
+    g(x, y);
+    cprintf("%c", 219);
+}
+
+void HDrawVerticalLine(x, y, length)
+{
+    int i;
+    for (i = 0; i < (length - (length / 2)); i++)
+    {
+        HDrawBlockOnScreen(x, y + i);
+    }
+}
+
+void HDrawCVerticalLine(x, y, length)
+{
+    int i;
+    for (i = 0; i < (length - (length / 2)); i++)
+    {
+        HDrawCBlockOnScreen(x, y + i);
+    }
+}
+
+void HDrawHorizontalLine(x, y, length)
+{
+
+    int i;
+    for (i = 0; i < length; i++)
+    {
+        HDrawBlockOnScreen(x + i, y);
+    }
+}
+
+void HDrawCHorizontalLine(x, y, length)
+{
+
+    int i;
+    for (i = 0; i < length; i++)
+    {
+        HDrawCBlockOnScreen(x + i, y);
+    }
+}
+
+void massAddDisksToRod(struct Rod *rod, struct Disk *disks, int diskCount)
+{
+    int i;
+    for (i = 0; i < diskCount; i++)
+    {
+        HPush(rod->stack, disks[i]);
+    }
+}
+
+struct Disk *createDisksBaseOnInput(int *input, int diskCount)
+{
+    int i;
+    struct Disk *disks = malloc(sizeof(struct Disk) * diskCount);
+    int colors[5] = {GREEN, RED, BLUE, YELLOW, MAGENTA}; // Define colors array
+    for (i = 0; i < diskCount; i++)
+    {
+        struct Disk disk;
+        disk.length = input[i];
+        disk.colorCode = colors[i % 5];
+        disks[i] = disk;
+    }
+
+    return disks;
+}
+
+void swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void bubbleSortDescending(int *arr, int n)
+{
+    int i, j;
+    int swapped;
+    for (i = 0; i < n - 1; i++)
+    {
+        swapped = 0;
+        for (j = 0; j < n - i - 1; j++)
+        {
+            if (arr[j] < arr[j + 1])
+            {
+                swap(&arr[j], &arr[j + 1]);
+                swapped = 1;
+            }
+        }
+
+        if (swapped == 0)
+            break;
+    }
+}
+
+int *copyNumberArray(int *numbers, int *copy, int count)
+{
+    int i;
+    for (i = 0; i < count; i++)
+    {
+        copy[i] = numbers[i];
+    }
+
+    return copy;
+}
+
+int *sortNumbersDescending(int *numbers, int diskCount)
+{
+    int *result = malloc(sizeof(int) * diskCount);
+    copyNumberArray(numbers, result, diskCount);
+
+    // [[2, 1, 3], 5, 4]
+    // [1, 2, 3]
+    bubbleSortDescending(result, diskCount);
+    return result;
+}
+
+int isSolved(struct Rod *threeRods, int diskCount)
+{
+    // If the second rod is full, then the puzzle is solved
+    if (threeRods[1].stack->top == diskCount - 1)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+struct HCoords createRodVisual(int x, int y)
+{
+    struct HCoords center;
+    int i;
+
+    HDrawCHorizontalLine(x, y, 10);
+    HDrawCVerticalLine(x + 5, y - 5, 10);
+    center.x = x + 5;
+    center.y = y;
+    return center;
+}
+
+void createDiskVisual(int x, int y, int diskLength, int *color)
+{
+    int start_x = x - (diskLength / 2);
+    textcolor(*color);
+    HDrawCHorizontalLine(start_x, y - 1, diskLength);
+    cprintf("%i", diskLength);
+}
+
+struct HCoords *createThreeRodsVisual()
+{
+    struct HCoords *threeVisualCoords = malloc(sizeof(struct HCoords) * 3);
+    int i;
+    int y = 20;
+    int x = 15;
+    textcolor(WHITE);
+    for (i = 0; i < 3; i++)
+    {
+        struct HCoords coords = createRodVisual(x + ((x + 5) * i), y);
+        threeVisualCoords[i] = coords;
+    }
+
+    return threeVisualCoords;
+}
+
+void updateDisksState(struct Rod *rods, struct HCoords *rodsCoords)
+{
+    int i, j;
+    clrscr();
+    createThreeRodsVisual();
+    // Different colors for disks
+    // There are three rods. Print disks for each
+    for (i = 0; i < 3; i++)
+    {
+        int numberOfDisksStacked = rods[i].stack->top + 1;
+        for (j = 0; j < numberOfDisksStacked; j++)
+        {
+            struct HCoords currentRodCoords = rodsCoords[i];
+            struct Disk disk = rods[i].stack->array[j]; // Get disk from stack
+            createDiskVisual(currentRodCoords.x, currentRodCoords.y - j, disk.length, &disk.colorCode);
+        }
+    }
+    delay(500);
+}
+
+void askForDiskLengths(int diskCount, int *diskLengths)
+{
+    int i;
+
+    for (i = 0; i < diskCount; i++)
+    {
+        int input;
+        cprintf("Length of disk #%i: ", i + 1);
+        scanf("%i", &input);
+        diskLengths[i] = input;
+    }
+}
+
+void towerOfHanoi()
+{
+    int diskCount;
+    struct Rod *threeRods;
+    int *diskLengths;
+    int *correctFormation;
+    int solvedFormation = 0;
+    struct Disk *disks;
+    struct HCoords rodCenter;
+    // Assign first rod to remove elements to as first rod.
+    struct Rod *lastRod;
+    struct HCoords *threeRodsVisualCoords;
+    clrscr();
+    // Add all disks to first rod initially
+    textcolor(WHITE);
+    cprintf("How many disks should there be? ");
+    scanf("%i", &diskCount);
+    // [ rod1, rod2, rod3]
+    threeRods = createThreeRods(diskCount);
+    lastRod = &threeRods[0];
+    diskLengths = malloc(sizeof(int) * diskCount);
+    // diskLengths = {3, 2, 1};
+    askForDiskLengths(diskCount, diskLengths);
+    correctFormation = sortNumbersDescending(diskLengths, diskCount);
+    disks = createDisksBaseOnInput(diskLengths, diskCount);
+    // rodCenter = createRodVisual(10, 10);
+    // createDiskVisual(rodCenter.x, rodCenter.y, 1);
+
+    threeRodsVisualCoords = createThreeRodsVisual();
+    massAddDisksToRod(&threeRods[0], disks, diskCount);
+    updateDisksState(threeRods, threeRodsVisualCoords);
+    while (!isSolved(threeRods, diskCount))
+    {
+        if (lastRod->id == 1)
+        {
+            int top = lastRod->stack->top;
+
+            // if stack empty, move to third rod
+            if (top == -1)
+            {
+                lastRod = &threeRods[2];
+                continue;
+            }
+
+            if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
+            {
+                struct Disk removedDisk = HPop(lastRod->stack);
+                struct Rod *secondRod = &threeRods[1];
+                HPush(secondRod->stack, removedDisk);
+                updateDisksState(threeRods, threeRodsVisualCoords);
+                solvedFormation++;
+            }
+            else
+            {
+                struct Disk removedDisk = HPop(lastRod->stack);
+                struct Rod *thirdRod = &threeRods[2];
+                HPush(thirdRod->stack, removedDisk);
+                updateDisksState(threeRods, threeRodsVisualCoords);
+            }
+        }
+
+        if (lastRod->id == 3)
+        {
+            int top = lastRod->stack->top;
+
+            // if stack empty, move to third rod
+            if (top == -1)
+            {
+                lastRod = &threeRods[0];
+                continue;
+            }
+
+            if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
+            {
+                struct Disk removedDisk = HPop(lastRod->stack);
+                struct Rod *secondRod = &threeRods[1];
+                HPush(secondRod->stack, removedDisk);
+                updateDisksState(threeRods, threeRodsVisualCoords);
+                solvedFormation++;
+            }
+            else
+            {
+                struct Disk removedDisk = HPop(lastRod->stack);
+                struct Rod *firstRod = &threeRods[0];
+                HPush(firstRod->stack, removedDisk);
+                updateDisksState(threeRods, threeRodsVisualCoords);
+            }
+        }
+    }
+    getch();
+}
+
 void main()
 {
     int choice;
@@ -1274,7 +1864,10 @@ void main()
         p("6. Graph\n");
         p("7. Car Queue\n");
         p("8. Car Stack\n");
-
+        p("9. Binary Search Tree\n");
+        p("10. Fibonacci\n");
+        p("11. Tower of Hanoi\n");
+        p("15. Exit Program\n");
         p("Your choice: ");
 
         s("%i", &choice);
@@ -1304,6 +1897,17 @@ void main()
             break;
         case 8:
             playCarStack();
+            break;
+        case 9:
+            searchTree();
+            break;
+        case 10:
+            fibo();
+            break;
+        case 11:
+            towerOfHanoi();
+            textcolor(WHITE);
+            cprintf("");
             break;
         case 15:
             quit = 1;
