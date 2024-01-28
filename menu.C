@@ -1847,6 +1847,35 @@ void towerOfHanoi()
     getch();
 }
 
+// Factorial
+
+long factorial(int n)
+{
+    if (n == 0)
+        return 1;
+    else
+        return (n * factorial(n - 1));
+}
+
+int runFactorial()
+{
+    int number;
+    long value;
+    clrscr();
+    g(20, 10);
+    printf("Enter a number: ");
+    s("%d", &number);
+
+    value = factorial(number);
+
+    g(20, 12);
+    printf("Factorial of %d is %ld\n", number, value);
+
+    promptBeforeExit();
+
+    return 0;
+}
+
 void main()
 {
     int choice;
@@ -1867,6 +1896,8 @@ void main()
         p("9. Binary Search Tree\n");
         p("10. Fibonacci\n");
         p("11. Tower of Hanoi\n");
+        p("12. Factorial\n");
+
         p("15. Exit Program\n");
         p("Your choice: ");
 
@@ -1908,6 +1939,9 @@ void main()
             towerOfHanoi();
             textcolor(WHITE);
             cprintf("");
+            break;
+        case 12:
+            runFactorial();
             break;
         case 15:
             quit = 1;
