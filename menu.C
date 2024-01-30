@@ -1059,7 +1059,7 @@ int carQueue()
     int Q[QSIZE];
     int carNumber, ch;
     int scanfResult;
-
+    int quit = 0;
     do
     {
         clrscr();
@@ -1080,8 +1080,9 @@ int carQueue()
         {
             clrscr();
             g(27, 18);
-            p("Exiting the program.\n");
-            exit(0);
+            promptBeforeExit();
+            quit = 1;
+            continue;
         }
 
         if (scanfResult != 1 || (ch < 1 || ch > 2))
@@ -1098,7 +1099,7 @@ int carQueue()
                 clrscr();
                 g(27, 23);
                 p("Exiting the program.\n");
-                exit(0);
+                quit = 1;
             }
             continue;
         }
@@ -1145,7 +1146,7 @@ int carQueue()
             p("Invalid choice. Please enter a valid option.\n");
         }
 
-    } while (1);
+    } while (!quit);
 
     return 0;
 }
