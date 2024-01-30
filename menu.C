@@ -1259,12 +1259,13 @@ int determineAction(carStack *stack, int choice)
         out = 1;
         break;
     case 4:
-        p("Input a car number to remove: ");
-        while (scanf("%i", &numberToRemove) != 1)
+        p("Input a car index to remove: ");
+        p("(Note: Index starts at 1)\n");
+        while (scanf("%i", &numberToRemove) != 1 || numberToRemove > stack->top + 1)
         {
             while (getchar() != '\n')
                 ; // clear the input buffer
-            p("Invalid input. Please enter an integer: ");
+            p("Invalid input. Please enter an integer, or ensure that integer is within stack range: ");
         }
         popByIndex(stack, numberToRemove);
         out = 1;
