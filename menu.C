@@ -101,67 +101,66 @@ void graph()
     p("BSCPE");
     // There is a g(22, 8) here formerly
     g(22, 8);
-    while (scanf("%i", &ece) != 1)
+    while (scanf("%i", &ece) != 1 || ece > 30)
     {
-
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 8);
     }
     g(22, 9);
-    while (scanf("%i", &ee) != 1)
+    while (scanf("%i", &ee) != 1 || ee > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 9);
     }
     g(22, 10);
-    while (scanf("%i", &ce) != 1)
+    while (scanf("%i", &ce) != 1 || ce > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 10);
     }
     g(22, 11);
-    while (scanf("%i", &rem) != 1)
+    while (scanf("%i", &rem) != 1 || rem > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 11);
     }
     g(22, 12);
-    while (scanf("%i", &me) != 1)
+    while (scanf("%i", &me) != 1 || me > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 12);
     }
     g(22, 13);
-    while (scanf("%i", &ie) != 1)
+    while (scanf("%i", &ie) != 1 || ie > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 13);
     }
     g(22, 14);
-    while (scanf("%i", &cpe) != 1)
+    while (scanf("%i", &cpe) != 1 || cpe > 30)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
         g(1, 1);
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 14);
     }
     // graph
@@ -2074,6 +2073,71 @@ int runFactorial()
     return 0;
 }
 
+// Clock
+
+void printLargerText(const char *text)
+{
+    int o;
+    for (o = 0; o < 1; ++o)
+    {
+        printf("\n");
+    }
+
+    printf("%s", text);
+
+    for (o = 0; o < 3; ++o)
+    {
+        printf("\n");
+    }
+}
+
+void clockProgram()
+{
+    int i, j, k;
+
+    for (i = 0; i <= 24; i++)
+    {
+        for (j = 0; j <= 59; j++)
+        {
+            for (k = 0; k <= 59; k++)
+            {
+                clrscr();
+                printLargerText(" ");
+                printf("\t\t\t\t    %02d:%02d:%02d", i, j, k);
+                printLargerText(" ");
+                printf("\t\t\t  Press 'q' to quit\n");
+                printf("\t\t\t  Press 'p' to pause\n");
+                printf("\t\t\t  Press 'r' to reset the clock\n");
+                delay(1000);
+
+                if (kbhit())
+                {
+                    char ch = getch();
+                    // Add code here to handle the key press
+                    switch (ch)
+                    {
+                    case 'q':
+                        printf("\n\t\t\t\t   Sayonara!");
+                        delay(1000);
+                        return;
+                    case 'p':
+                        printf("\t\t\t  Press 'r' to resume");
+                        while (getch() != 'r')
+                            ;
+                        break;
+                    case 'r':
+                        printf("\n\t\t\t\tResetting clock");
+                        i = 0;
+                        j = 0;
+                        k = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void main()
 {
     int choice;
@@ -2095,7 +2159,7 @@ void main()
         p("10. Fibonacci\n");
         p("11. Tower of Hanoi\n");
         p("12. Factorial\n");
-
+        p("13. Clock/Timer\n");
         p("15. Exit Program\n");
         p("Your choice: ");
 
@@ -2145,6 +2209,9 @@ void main()
             break;
         case 12:
             runFactorial();
+            break;
+        case 13:
+            clockProgram();
             break;
         case 15:
             quit = 1;
