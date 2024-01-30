@@ -99,21 +99,71 @@ void graph()
     p("BSIE");
     g(5, 14);
     p("BSCPE");
+    // There is a g(22, 8) here formerly
     g(22, 8);
-    s("%d", &ece);
-    g(22, 9);
-    s("%d", &ee);
-    g(22, 10);
-    s("%d", &ce);
-    g(22, 11);
-    s("%d", &rem);
-    g(22, 12);
-    s("%d", &me);
-    g(22, 13);
-    s("%d", &ie);
-    g(22, 14);
-    s("%d", &cpe);
+    while (scanf("%i", &ece) != 1)
+    {
 
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 8);
+    }
+    g(22, 9);
+    while (scanf("%i", &ee) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 9);
+    }
+    g(22, 10);
+    while (scanf("%i", &ce) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 10);
+    }
+    g(22, 11);
+    while (scanf("%i", &rem) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 11);
+    }
+    g(22, 12);
+    while (scanf("%i", &me) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 12);
+    }
+    g(22, 13);
+    while (scanf("%i", &ie) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 13);
+    }
+    g(22, 14);
+    while (scanf("%i", &cpe) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        g(1, 1);
+        p("Invalid input. Please enter an integer: ");
+        g(22, 14);
+    }
     // graph
     g(46, 5);
     p("ECE");
