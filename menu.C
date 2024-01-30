@@ -940,12 +940,12 @@ void binaryTree()
     clrscr();
     presentNodes = 0;
 
-    p("Number of levels (Maximum of 5): \n");
-    while (scanf("%i", &numberOfLevels) != 1)
+    p("Number of levels (Maximum of 4): \n");
+    while (scanf("%i", &numberOfLevels) != 1 || numberOfLevels > 4)
     {
         while (getchar() != '\n')
             ;
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (maximum of 4): ");
     }
 
     nodes = getNumberOfNodes(numberOfLevels);
