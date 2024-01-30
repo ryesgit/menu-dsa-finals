@@ -703,29 +703,14 @@ int sdisplayActions()
     p("3. Display cars\n");
     p("4. Exit program\n");
     p("Please enter your choice: ");
-    scanf("%i", &choice);
+    while (scanf("%i", &choice) != 1)
+    {
+        while (getchar() != '\n')
+            ;
+        p("Invalid input. Please enter an integer: ");
+    }
     return choice;
 }
-
-// void removeNode(LinkedList *list, int value)
-// {
-//     LinkedList *currentList = list;
-//     LinkedList *previousList = list;
-
-//     while (currentList->next != NULL)
-//     {
-//         previousList = currentList;
-//         currentList = currentList->next;
-//         if (currentList->value == value)
-//         {
-//             previousList->next = currentList->next;
-//             p("Removed %i car\n", currentList->value);
-//             delay(500);
-//             free(currentList);
-//             return;
-//         }
-//     }
-// }
 
 int deleteAllCars(LinkedList *carList)
 {
@@ -956,10 +941,11 @@ void binaryTree()
     presentNodes = 0;
 
     p("Number of levels (Maximum of 5): \n");
-    s(" %i", &numberOfLevels);
-
-    if (numberOfLevels > 5)
+    while (scanf("%i", &numberOfLevels) != 1)
     {
+        while (getchar() != '\n')
+            ;
+        p("Invalid input. Please enter an integer: ");
     }
 
     nodes = getNumberOfNodes(numberOfLevels);
@@ -1040,15 +1026,6 @@ void binaryTree()
         }
         enqueue(&queue, currentNode->left);
         enqueue(&queue, currentNode->right);
-        // if (currentNode->left->left == NULL || currentNode->left->right == NULL)
-        // {
-        //     enqueue(&queue, currentNode->left);
-        // }
-
-        // if (currentNode->right->left == NULL || currentNode->right->right == NULL)
-        // {
-        //     enqueue(&queue, currentNode->right);
-        // }
         currentNode = dequeue(&queue);
     }
 
@@ -1154,12 +1131,22 @@ int carQueue()
     do
     {
         p("\n[1] Car Park\n[2] Car Departure\n[3] Exit\n \nEnter your choice: ");
-        s("%d", &ch);
+        while (scanf("%d", &ch) != 1)
+        {
+            while (getchar() != '\n')
+                ;
+            p("Invalid input. Please enter an integer: ");
+        }
         switch (ch)
         {
         case 1:
             p("Enter Car Number to Park: ");
-            s("%d", &carNumber);
+            while (scanf("%d", &carNumber) != 1)
+            {
+                while (getchar() != '\n')
+                    ;
+                p("Invalid input. Please enter an integer: ");
+            }
             queueEnqueue(Q, carNumber);
             display(Q);
             break;
@@ -1252,7 +1239,12 @@ int displayActions()
     p("4. Remove a car by index\n");
     p("5. Exit program\n");
     p("Please enter your choice: ");
-    scanf("%i", &choice);
+    while (scanf("%i", &choice) != 1)
+    {
+        while (getchar() != '\n')
+            ;
+        p("Invalid input. Please enter an integer: ");
+    }
     return choice;
 }
 
@@ -1465,7 +1457,12 @@ void fillNumbers(struct Tree *tree, int numberCount)
 
         int number;
         printf("Input #%i: ", i + 1);
-        scanf("%i", &number);
+        while (scanf("%i", &number) != 1)
+        {
+            while (getchar() != '\n')
+                ; // clear the input buffer
+            p("Invalid input. Please enter an integer: ");
+        }
         appendToTree(tree, number);
     }
 }
@@ -1478,9 +1475,19 @@ void searchTree()
     struct Tree binaryTree;
     clrscr();
     printf("How many numbers will you input?\n");
-    scanf("%i", &numberCount);
+    while (scanf("%i", &numberCount) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        p("Invalid input. Please enter an integer: ");
+    }
     printf("Enter value of root node\n");
-    scanf("%i", &root.value);
+    while (scanf("%i", &root.value) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        p("Invalid input. Please enter an integer: ");
+    }
     // root.value = 7;
     binaryTree.root = &root;
     root.left = NULL;
@@ -1926,7 +1933,12 @@ void askForDiskLengths(int diskCount, int *diskLengths)
     {
         int input;
         cprintf("Length of disk #%i: ", i + 1);
-        scanf("%i", &input);
+        while (scanf("%i", &input) != 1)
+        {
+            while (getchar() != '\n')
+                ; // clear the input buffer
+            p("Invalid input. Please enter an integer: ");
+        }
         diskLengths[i] = input;
     }
 }
@@ -1947,7 +1959,12 @@ void towerOfHanoi()
     // Add all disks to first rod initially
     textcolor(WHITE);
     cprintf("How many disks should there be? ");
-    scanf("%i", &diskCount);
+    while (scanf("%i", &diskCount) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        p("Invalid input. Please enter an integer: ");
+    }
     // [ rod1, rod2, rod3]
     threeRods = createThreeRods(diskCount);
     lastRod = &threeRods[0];
@@ -2040,7 +2057,12 @@ int runFactorial()
     clrscr();
     g(20, 10);
     printf("Enter a number: ");
-    s("%d", &number);
+    while (scanf("%d", &number) != 1)
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        p("Invalid input. Please enter an integer: ");
+    }
 
     value = factorial(number);
 
@@ -2077,7 +2099,12 @@ void main()
         p("15. Exit Program\n");
         p("Your choice: ");
 
-        s("%i", &choice);
+        while (scanf("%i", &choice) != 1)
+        {
+            while (getchar() != '\n')
+                ; // clear the input buffer
+            p("Invalid input. Please enter an integer: ");
+        }
 
         switch (choice)
         {
