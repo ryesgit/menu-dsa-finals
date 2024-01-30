@@ -1215,7 +1215,12 @@ int determineAction(carStack *stack, int choice)
     {
     case 1:
         p("Input a car number: ");
-        scanf("%i", &carNumber);
+        while (scanf("%i", &carNumber) != 1)
+        {
+            while (getchar() != '\n')
+                ; // clear the input buffer
+            p("Invalid input. Please enter an integer: ");
+        }
         addCarToStack(stack, carNumber);
         out = 1;
         break;
@@ -1229,7 +1234,12 @@ int determineAction(carStack *stack, int choice)
         break;
     case 4:
         p("Input a car number to remove: ");
-        scanf("%i", &numberToRemove);
+        while (scanf("%i", &numberToRemove) != 1)
+        {
+            while (getchar() != '\n')
+                ; // clear the input buffer
+            p("Invalid input. Please enter an integer: ");
+        }
         popByIndex(stack, numberToRemove);
         out = 1;
         break;
@@ -1434,45 +1444,161 @@ void searchTree()
 }
 
 // Fibo
+#define MAX 1000
+void gotoxy(int x, int y)
+{
+    printf("\033[%d;%dH", y, x);
+}
+
+long long fib[MAX];
+
 long long fibonacci(long long order)
 {
     if (order == 0 || order == 1)
     {
         return order;
     }
-    else
+
+    if (fib[order] != -1)
     {
-        return fibonacci(order - 1) + fibonacci(order - 2);
+        return fib[order];
     }
+
+    fib[order] = fibonacci(order - 1) + fibonacci(order - 2);
+    return fib[order];
+}
+
+void initializeFibArray()
+{
+    int i;
+    for (i = 0; i < MAX; i++)
+    {
+        fib[i] = -1;
+    }
+}
+
+void printFibonacciTable(long long input)
+{
+    long long i;
+    g(14, 14);
+    printf("Here is the Fibonacci sequence of %llu:\n", input);
+
+    g(21, 15);
+    printf("+-----------+-----------------------+\n");
+    g(21, 16);
+    printf("|   Order   |     Fibonacci Number  |\n");
+    g(21, 17);
+    printf("+-----------+-----------------------+\n");
+
+    for (i = 0; i < input; i++)
+    {
+        g(21, 18 + i);
+        printf("|%11llu|%23llu|\n", i + 1, fibonacci(i));
+    }
+    g(21, 18 + input);
+    printf("+-----------+-----------------------+\n\n");
 }
 
 int fibo()
 {
-
     long long input;
-    long long i;
     int state = 1;
+
+    initializeFibArray();
 
     while (state)
     {
         clrscr();
-        g(10, 10);
-        printf("Type in a number, receive fibonacci counterpart\n");
-        g(10, 12);
-        s("%llu", &input);
-        g(10, 15);
-        for (i = 0; i < input; i++)
+        g(12, 3);
+        printf("========================================================\n");
+        g(12, 4);
+        printf("|                 FIBONACCI CALCULATOR                 |\n");
+        g(12, 5);
+        printf("========================================================\n");
+        g(14, 7);
+        printf("Type a number to find its fibonacci value (1-48) ");
+        g(14, 9);
+        printf("Enter the number:  ");
+
+        if (s("%llu", &input) != 1)
         {
-            printf("%llu, ", fibonacci(i));
+            sleep(1);
+            g(14, 10);
+            printf("[ERROR] Invalid input. Please enter a valid integer.\n");
+            g(12, 12);
+            printf("========================================================\n");
+            g(14, 14);
+            printf("Press 'F' to quit; press any other key to try again");
+
+            if (getch() == 'F' || getch() == 'f')
+            {
+                state = 0;
+            }
+            while (getchar() != '\n')
+                ;
+            clrscr();
+            continue;
         }
-        g(10, 25);
-        printf("Press 'F' to quit; press any other key to continue");
+        else if (input < 0)
+        {
+            sleep(1);
+            g(14, 10);
+            printf("[ERROR] Invalid input. Please enter a positive integer.\n");
+            g(12, 12);
+            printf("========================================================\n");
+            g(14, 14);
+            printf("Press 'F' to quit; press any other key to try again");
+
+            if (getch() == 'F' || getch() == 'f')
+            {
+                state = 0;
+            }
+            while (getchar() != '\n')
+                ;
+            clrscr();
+            continue;
+        }
+        else if (input > 33)
+        {
+            sleep(1);
+            g(14, 10);
+            printf("[ERROR] The program cannot perform the calculation.\n");
+            g(12, 12);
+            printf("========================================================\n");
+            g(14, 14);
+            printf("Press 'F' to quit; press any other key to try again");
+
+            if (getch() == 'F' || getch() == 'f')
+            {
+                state = 0;
+            }
+            while (getchar() != '\n')
+                ;
+            clrscr();
+            continue;
+        }
+
+        g(14, 10);
+        printf("Calculating....");
+        sleep(2);
+
+        g(14, 12);
+        printf("The Fibonacci value of %llu is %llu\n", input, fibonacci(input - 1));
+
+        printFibonacciTable(input);
+
+        g(12, 17 + input + 5);
+        printf("========================================================\n\n");
+        g(14, 19 + input + 5);
+        printf("Press 'F' to quit; press any other key to try again");
+
         if (getch() == 'F' || getch() == 'f')
         {
             state = 0;
         }
-        return 0;
     }
+
+    return 0;
 }
 // Tower of hanoi
 #include <stdio.h>
