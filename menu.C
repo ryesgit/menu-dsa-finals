@@ -357,287 +357,154 @@ void squareCubed()
     promptBeforeExit();
 }
 
-void typeOnScreen(message, x, y)
+char square[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+int win();
+void board();
+int player = 1, i, choice;
+
+char mark;
+
+int ticTacToe()
 {
-    g(x, y);
-    p("%s", message);
-}
-
-void drawBlockOnScreen(x, y)
-{
-    g(x, y);
-    p("%c", 219);
-}
-
-void drawOnScreen(character, x, y)
-{
-    g(x, y);
-    p("%c", character);
-}
-
-void drawVerticalLine(x, y, length)
-{
-    int i;
-    for (i = 0; i < (length - (length / 2)); i++)
-    {
-        drawBlockOnScreen(x, y + i);
-    }
-}
-
-void drawHorizontalLine(x, y, length)
-{
-
-    int i;
-    for (i = 0; i < length; i++)
-    {
-        drawBlockOnScreen(x + i, y);
-    }
-}
-
-/*
-Returns center of cell,
-location to which character can be placed
-*/
-Coords drawCell(x, y, length)
-{
-
-    int centerX, centerY;
-    Coords cellCenterCoords;
-    drawHorizontalLine(x, y, length);
-    drawVerticalLine(x + length, y, length);
-    drawVerticalLine(x, y, length);
-    drawHorizontalLine(x, y + (length / 2), length + 1);
-
-    centerX = abs((x + (length / 2)));
-    centerY = abs(y + (length * .33));
-
-    cellCenterCoords.x = centerX;
-    cellCenterCoords.y = centerY;
-    return cellCenterCoords;
-}
-
-int hasHorizontalWinner(char gameboard[3][3])
-{
-
-    int i;
-
-    int hasWinner = 0;
-
-    for (i = 0; i < 3; i++)
-    {
-        if (gameboard[i][0] == gameboard[i][1] && gameboard[i][1] == gameboard[i][2])
-        {
-            hasWinner = 1;
-            return hasWinner;
-        }
-    }
-
-    return hasWinner;
-}
-
-int hasVerticalWinner(char gameboard[3][3])
-{
-
-    int i;
-    int j = 0;
-
-    int hasWinner = 0;
-
-    for (i = 0; i < 3; i++)
-    {
-        if (gameboard[j][i] == gameboard[j + 1][i] && gameboard[j + 1][i] == gameboard[j + 2][i])
-        {
-            hasWinner = 1;
-            return hasWinner;
-        }
-    }
-
-    return hasWinner;
-}
-
-int hasDiagonalWinner(char gameboard[3][3])
-{
-
-    int hasWinner = 0;
-
-    if (gameboard[0][0] == gameboard[1][1] && gameboard[1][1] == gameboard[2][2] ||
-        gameboard[0][2] == gameboard[1][1] && gameboard[1][1] == gameboard[2][0])
-    {
-        hasWinner = 1;
-        return hasWinner;
-    }
-
-    return hasWinner;
-}
-
-int hasWinner(char gameboard[3][3])
-{
-
-    if (hasHorizontalWinner(gameboard) || hasVerticalWinner(gameboard) || hasDiagonalWinner(gameboard))
-    {
-        return 1;
-    }
-
-    // char diagonalWinningPatterns[2][3] = {
-    //     {gameboard[0][0], gameboard[1][1], gameboard[2][2]},
-    //     {gameboard[0][2], gameboard[1][1], gameboard[2][0]}};
-    return 0;
-}
-
-int hasDraw(char gameboard[3][3])
-{
-    int i, j;
-
-    int filledCells = 0;
-
-    for (i = 0; i < 3; i++)
-    {
-        for (j = 0; j < 3; j++)
-        {
-            if (gameboard[i][j] == 'x' || gameboard[i][j] == 'o')
-            {
-                filledCells++;
-            }
-        }
-    }
-    if (filledCells >= 9 && hasWinner(gameboard) != 1)
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
-void playTurn(Player currentPlayer, char gameboard[3][3])
-{
-    int illegalMove;
-    illegalMove = 1;
-    while (illegalMove)
-    {
-        int choice, row, column;
-        typeOnScreen("Please type in a choice: ", 25, 25);
-
-        p("");
-        s("%i", &choice);
-
-        if (!isdigit(choice))
-        {
-            clrscr();
-            p("Please enter a number only");
-            delay(5000);
-        }
-
-        if (choice <= 3)
-        {
-            row = 0;
-        }
-        else if (choice > 3 && choice <= 6)
-        {
-            row = 1;
-        }
-        else
-        {
-            row = 2;
-        }
-
-        column = (choice - 1) % 3;
-
-        if (gameboard[row][column] == 'x' || gameboard[row][column] == 'o')
-        {
-            g(25, 25);
-            p("Illegal move, try again");
-            delay(1000);
-            continue;
-        }
-        else
-        {
-            p("%c", gameboard[row][column]);
-            gameboard[row][column] = currentPlayer.marker;
-            illegalMove = 0;
-        }
-    }
-}
-
-void drawGameboard(int x, int y, int length, char gameboard[3][3])
-{
-    int i;
-
     clrscr();
+    textcolor(YELLOW);
 
-    for (i = 0; i < 3; i++)
+    do
     {
-        Coords centerCoords;
-        centerCoords = drawCell(x + (length * i), y, length);
-        drawOnScreen(gameboard[0][i], centerCoords.x, centerCoords.y);
-    };
+        board();
+        player = (player % 2) ? 1 : 2;
 
-    for (i = 0; i < 3; i++)
-    {
-        Coords centerCoords;
-        centerCoords = drawCell(x + (length * i), (y + (length / 2)), length);
-        drawOnScreen(gameboard[1][i], centerCoords.x, centerCoords.y);
-    };
+        g(20, 12);
+        printf("\tPlayer %d, enter a number to be marked: ", player);
+        scanf("%d", &choice);
 
-    for (i = 0; i < 3; i++)
-    {
-        Coords centerCoords;
-        centerCoords = drawCell(x + (length * i), y + (length), length);
-        drawOnScreen(gameboard[2][i], centerCoords.x, centerCoords.y);
-    };
-}
+        mark = (player == 1) ? 'X' : 'O';
 
-void ticTacToe()
-{
-    int i, j;
+        if (choice == 1 && square[1] == '1')
+            square[1] = mark;
 
-    Player playerOne = {
-        'x',
-        1};
+        else if (choice == 2 && square[2] == '2')
+            square[2] = mark;
 
-    Player playerTwo = {
-        'o',
-        2};
+        else if (choice == 3 && square[3] == '3')
+            square[3] = mark;
 
-    Player currentPlayer = playerOne;
+        else if (choice == 4 && square[4] == '4')
+            square[4] = mark;
 
-    char gameboard[3][3] = {
-        {'1', '2', '3'},
-        {'4', '5', '6'},
-        {'7', '8', '9'}};
+        else if (choice == 5 && square[5] == '5')
+            square[5] = mark;
 
-    drawGameboard(25, 5, 10, gameboard);
-    playTurn(currentPlayer, gameboard);
-    drawGameboard(25, 5, 10, gameboard);
+        else if (choice == 6 && square[6] == '6')
+            square[6] = mark;
 
-    // While there is no winner and there is no draw, just play game
-    while (hasWinner(gameboard) != 1 && hasDraw(gameboard) != 1)
-    {
-        if (currentPlayer.playerNumber == playerOne.playerNumber)
-        {
-            currentPlayer = playerTwo;
-        }
+        else if (choice == 7 && square[7] == '7')
+            square[7] = mark;
+
+        else if (choice == 8 && square[8] == '8')
+            square[8] = mark;
+
+        else if (choice == 9 && square[9] == '9')
+            square[9] = mark;
+
         else
         {
-            currentPlayer = playerOne;
+            g(15, 18);
+            printf("\t\tInvalid Move! Please input numbers 1 to 9 only \n\t\t\tand numbers that hasn't been marked yet.\n\n\t\t\tPress any key to continue...");
+
+            player--;
+            getch();
         }
-        playTurn(currentPlayer, gameboard);
-        drawGameboard(25, 5, 10, gameboard);
-    }
+        i = win();
 
-    g(17, 13);
+        player++;
+    } while (i == -1);
 
-    if (hasWinner(gameboard) == 1)
-    {
-        p("Congratulations, player number %i! You have won!", currentPlayer.playerNumber);
-    }
+    board();
 
-    if (hasDraw(gameboard) == 1)
-    {
-        p("It's a draw!");
-    }
-    g(25, 10);
+    if (i == 1)
+        cprintf("        \aPlayer %d won!!!", --player);
+    else
+        cprintf("        \n\n\aGame Draw");
 
     promptBeforeExit();
+
+    return 0;
+}
+
+/**********************
+to check if there's a winner
+*********************/
+int win()
+{
+    /*********************
+    horizontal points
+    *********************/
+    if (square[1] == square[2] && square[2] == square[3])
+        return 1;
+
+    else if (square[4] == square[5] && square[5] == square[6])
+        return 1;
+
+    else if (square[7] == square[8] && square[8] == square[9])
+        return 1;
+
+    /*********************
+    vertical points
+    *********************/
+    else if (square[1] == square[4] && square[4] == square[7])
+        return 1;
+
+    else if (square[2] == square[5] && square[5] == square[8])
+        return 1;
+
+    else if (square[3] == square[6] && square[6] == square[9])
+        return 1;
+
+    /*********************
+    diagonal points
+    *********************/
+    else if (square[1] == square[5] && square[5] == square[9])
+        return 1;
+
+    else if (square[3] == square[5] && square[5] == square[7])
+        return 1;
+
+    else if (square[1] != '1' && square[2] != '2' && square[3] != '3' &&
+             square[4] != '4' && square[5] != '5' && square[6] != '6' && square[7] != '7' && square[8] != '8' && square[9] != '9')
+
+        return 0;
+    else
+        return -1;
+}
+
+/*****************************
+Function for the board
+*****************************/
+void board()
+{
+
+    system("cls");
+
+    cprintf("     \n\nTIC TAC TOE\n\n");
+
+    printf("\tPlayer 1(X) vs. Player 2(O)\n\n\n");
+
+    printf("        |   |   \n");
+    printf("      %c | %c | %c \n", square[1], square[2], square[3]);
+
+    printf("     ___|___|___\n");
+    printf("        |   |   \n");
+
+    printf("      %c | %c | %c \n", square[4], square[5], square[6]);
+
+    printf("     ___|___|___\n");
+    printf("        |   |   \n");
+
+    printf("      %c | %c | %c \n", square[7], square[8], square[9]);
+
+    printf("        |   |   ");
 }
 
 typedef struct LinkedList
@@ -711,7 +578,7 @@ int sdisplayActions()
     return choice;
 }
 
-int deleteAllCars(LinkedList *carList)
+void deleteAllCars(LinkedList *carList)
 {
 
     int currentCarValue = carList->value;
