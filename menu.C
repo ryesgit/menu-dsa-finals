@@ -938,98 +938,215 @@ int promptBeforeExit()
 #define c cprintf
 #define s scanf
 #define g gotoxy
+#define QSIZE 15
 int Front = -1;
 int Rear = -1;
 
-void queueEnqueue(int Q[SIZE], int carNumber)
+void clrscr()
 {
-    if (Rear < SIZE - 1)
+    system("cls");
+}
+
+int isValidCarNumber(int carNumber)
+{
+    return carNumber > 0 && carNumber <= 9;
+}
+
+int isCarExist(int Q[QSIZE], int carNumber)
+{
+    int i;
+    for (i = Front; i <= Rear; i++)
     {
-        Rear++;
-        Q[Rear] = carNumber;
-        p("\nCar %d has entered the garage. \n", Q[Rear]);
+        if (Q[i] == carNumber)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void Qenqueue(int Q[QSIZE], int carNumber)
+{
+    clrscr();
+
+    if (Rear == QSIZE - 1)
+    {
+        g(25, 11);
+        p("Sorry, the garage is full.\n");
+        sleep(2);
+        return;
+    }
+
+    if (isCarExist(Q, carNumber))
+    {
+        g(6, 11);
+        p("Car %d is already in the garage. Please choose a different car number.\n", carNumber);
+        sleep(2);
     }
     else
     {
-        p("\nSorry, the garage is full.\n");
+        Rear++;
+        Q[Rear] = carNumber;
+        g(25, 11);
+        p("Car %d has entered the garage.\n", Q[Rear]);
+        sleep(2);
     }
+
     if (Front == -1)
     {
         Front++;
     }
 }
 
-void queueDequeue(int Q[SIZE])
+void Qdequeue(int Q[QSIZE])
 {
-    if (Front <= Rear)
+    clrscr();
+
+    if (Front < Rear)
     {
-        p("\nCar %d has left the garage. \n", Q[Front]);
+        g(25, 11);
+        p("Car %d has left the garage.\n", Q[Front]);
+        sleep(2);
         Front++;
+
+        if (Front > Rear)
+        {
+            Front = -1;
+            Rear = -1;
+        }
     }
     else
     {
-        p("\nGarage is empty. \n");
+        g(30, 11);
+        p("Garage is empty.\n");
+        sleep(2);
         Front = -1;
         Rear = -1;
     }
 }
 
-void display(int Q[SIZE])
+void display(int Q[QSIZE])
 {
     int x;
+
     clrscr();
-    p("Garage\n");
+
+    g(2, 3);
+    p("==============================================================================\n");
+    g(2, 4);
+    p("|                              9-CAR GARAGE                                  |\n");
+    g(2, 5);
+    p("==============================================================================\n");
+    g(2, 9);
+    p("==============================================================================\n\n");
+    g(4, 7);
+
+    if (Front == -1)
+    {
+        g(29, 7);
+        p("Garage Status: EMPTY \n");
+        return;
+    }
+
     for (x = Front; x <= Rear; x++)
     {
-        p("===========\n");
-        p("Car %d ", Q[x]);
-        p("\n===========\n");
+        p(" Car %d |", Q[x]);
     }
 }
+
 int carQueue()
 {
-    int Q[SIZE];
+    int Q[QSIZE];
     int carNumber, ch;
-    clrscr();
-    g(10, 10);
-    p("CAR GARAGE\n\n");
+    int scanfResult;
 
     do
     {
-        p("\n[1] Car Park\n[2] Car Departure\n[3] Exit\n \nEnter your choice: ");
-        while (scanf("%d", &ch) != 1)
+        clrscr();
+        display(Q);
+
+        g(27, 12);
+        p("[1] Car Park\n");
+        g(27, 13);
+        p("[2] Car Departure\n");
+        g(27, 14);
+        p("[3] Exit Program\n");
+        g(27, 16);
+        p("Enter your choice: ");
+        scanfResult = s("%d", &ch);
+        sleep(1);
+
+        if (ch == 3)
         {
-            while (getchar() != '\n')
-                ;
-            p("Invalid input. Please enter an integer: ");
+            clrscr();
+            g(27, 18);
+            p("Exiting the program.\n");
+            exit(0);
         }
+
+        if (scanfResult != 1 || (ch < 1 || ch > 2))
+        {
+            clrscr();
+            g(17, 11);
+            p("[ERROR] Please choose between 1, 2, and 3 only.\n");
+            g(19, 13);
+            p("Press any key to continue or 'Q' to exit.\n");
+            ch = getch();
+
+            if (ch == 'Q' || ch == 'q')
+            {
+                clrscr();
+                g(27, 23);
+                p("Exiting the program.\n");
+                exit(0);
+            }
+            continue;
+        }
+
         switch (ch)
         {
         case 1:
-            p("Enter Car Number to Park: ");
-            while (scanf("%d", &carNumber) != 1)
-            {
-                while (getchar() != '\n')
-                    ;
-                p("Invalid input. Please enter an integer: ");
-            }
-            queueEnqueue(Q, carNumber);
             display(Q);
+            g(23, 11);
+            p("Enter Car Number to Park (1-9): ");
+            scanfResult = s("%d", &carNumber);
+            sleep(1);
+
+            if (!isValidCarNumber(carNumber))
+            {
+                clrscr();
+                g(19, 11);
+                p("[ERROR] Please enter a number from 1 to 9.\n");
+                g(20, 13);
+                p("Press any key to continue or 'Q' to exit.\n");
+                ch = getch();
+
+                if (ch == 'Q' || ch == 'q')
+                {
+                    clrscr();
+                    g(18, 16);
+                    p("Exiting the program.");
+                    exit(0);
+                }
+                continue;
+            }
+
+            Qenqueue(Q, carNumber);
             break;
 
         case 2:
-            queueDequeue(Q);
             display(Q);
-            break;
-
-        case 3:
-            p("Exiting the program.\n");
+            Qdequeue(Q);
             break;
 
         default:
-            p("\nInvalid choice. Please enter a valid option.\n");
+            clrscr();
+            g(20, 16);
+            p("Invalid choice. Please enter a valid option.\n");
         }
-    } while (ch != 3);
+
+    } while (1);
+
     return 0;
 }
 
