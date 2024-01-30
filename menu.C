@@ -1928,9 +1928,27 @@ void askForDiskLengths(int diskCount, int *diskLengths)
     }
 }
 
+void TowerOfHanoi(int n, struct Rod *from_rod, struct Rod *to_rod, struct Rod *aux_rod, struct Rod *threeRods, struct HCoords *threeRodsVisualCoords)
+{
+    struct Disk removedDisk;
+    if (n == 1)
+    {
+        struct Disk removedDisk = HPop(from_rod->stack);
+        HPush(to_rod->stack, removedDisk);
+        updateDisksState(threeRods, threeRodsVisualCoords);
+        return;
+    }
+    TowerOfHanoi(n - 1, from_rod, aux_rod, to_rod, threeRods, threeRodsVisualCoords);
+    removedDisk = HPop(from_rod->stack);
+    HPush(to_rod->stack, removedDisk);
+    updateDisksState(threeRods, threeRodsVisualCoords);
+    TowerOfHanoi(n - 1, aux_rod, to_rod, from_rod, threeRods, threeRodsVisualCoords);
+}
+
 void towerOfHanoi()
 {
     int diskCount;
+    int isTraditional;
     struct Rod *threeRods;
     int *diskLengths;
     int *correctFormation;
@@ -1957,70 +1975,95 @@ void towerOfHanoi()
     // diskLengths = {3, 2, 1};
     askForDiskLengths(diskCount, diskLengths);
     correctFormation = sortNumbersDescending(diskLengths, diskCount);
-    disks = createDisksBaseOnInput(diskLengths, diskCount);
+
     // rodCenter = createRodVisual(10, 10);
     // createDiskVisual(rodCenter.x, rodCenter.y, 1);
+    isTraditional = 0;
+    cprintf("Do you want to play the traditional way? (1 for yes, 0 for no): ");
+    while (scanf("%i", &isTraditional) != 1 || (isTraditional != 1 && isTraditional != 0))
+    {
+        while (getchar() != '\n')
+            ; // clear the input buffer
+        p("Invalid input. Please enter an integer, or ensure that number is either 0 or 1: ");
+    }
+
+    if (isTraditional)
+    {
+        disks = createDisksBaseOnInput(correctFormation, diskCount);
+    }
+    else
+    {
+        disks = createDisksBaseOnInput(diskLengths, diskCount);
+    }
 
     threeRodsVisualCoords = createThreeRodsVisual();
     massAddDisksToRod(&threeRods[0], disks, diskCount);
     updateDisksState(threeRods, threeRodsVisualCoords);
-    while (!isSolved(threeRods, diskCount))
+
+    if (!isTraditional)
     {
-        if (lastRod->id == 1)
+        while (!isSolved(threeRods, diskCount))
         {
-            int top = lastRod->stack->top;
-
-            // if stack empty, move to third rod
-            if (top == -1)
+            if (lastRod->id == 1)
             {
-                lastRod = &threeRods[2];
-                continue;
+                int top = lastRod->stack->top;
+
+                // if stack empty, move to third rod
+                if (top == -1)
+                {
+                    lastRod = &threeRods[2];
+                    continue;
+                }
+
+                if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
+                {
+                    struct Disk removedDisk = HPop(lastRod->stack);
+                    struct Rod *secondRod = &threeRods[1];
+                    HPush(secondRod->stack, removedDisk);
+                    updateDisksState(threeRods, threeRodsVisualCoords);
+                    solvedFormation++;
+                }
+                else
+                {
+                    struct Disk removedDisk = HPop(lastRod->stack);
+                    struct Rod *thirdRod = &threeRods[2];
+                    HPush(thirdRod->stack, removedDisk);
+                    updateDisksState(threeRods, threeRodsVisualCoords);
+                }
             }
 
-            if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
+            if (lastRod->id == 3)
             {
-                struct Disk removedDisk = HPop(lastRod->stack);
-                struct Rod *secondRod = &threeRods[1];
-                HPush(secondRod->stack, removedDisk);
-                updateDisksState(threeRods, threeRodsVisualCoords);
-                solvedFormation++;
-            }
-            else
-            {
-                struct Disk removedDisk = HPop(lastRod->stack);
-                struct Rod *thirdRod = &threeRods[2];
-                HPush(thirdRod->stack, removedDisk);
-                updateDisksState(threeRods, threeRodsVisualCoords);
+                int top = lastRod->stack->top;
+
+                // if stack empty, move to third rod
+                if (top == -1)
+                {
+                    lastRod = &threeRods[0];
+                    continue;
+                }
+
+                if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
+                {
+                    struct Disk removedDisk = HPop(lastRod->stack);
+                    struct Rod *secondRod = &threeRods[1];
+                    HPush(secondRod->stack, removedDisk);
+                    updateDisksState(threeRods, threeRodsVisualCoords);
+                    solvedFormation++;
+                }
+                else
+                {
+                    struct Disk removedDisk = HPop(lastRod->stack);
+                    struct Rod *firstRod = &threeRods[0];
+                    HPush(firstRod->stack, removedDisk);
+                    updateDisksState(threeRods, threeRodsVisualCoords);
+                }
             }
         }
-
-        if (lastRod->id == 3)
-        {
-            int top = lastRod->stack->top;
-
-            // if stack empty, move to third rod
-            if (top == -1)
-            {
-                lastRod = &threeRods[0];
-                continue;
-            }
-
-            if (lastRod->stack->array[top].length == correctFormation[solvedFormation])
-            {
-                struct Disk removedDisk = HPop(lastRod->stack);
-                struct Rod *secondRod = &threeRods[1];
-                HPush(secondRod->stack, removedDisk);
-                updateDisksState(threeRods, threeRodsVisualCoords);
-                solvedFormation++;
-            }
-            else
-            {
-                struct Disk removedDisk = HPop(lastRod->stack);
-                struct Rod *firstRod = &threeRods[0];
-                HPush(firstRod->stack, removedDisk);
-                updateDisksState(threeRods, threeRodsVisualCoords);
-            }
-        }
+    }
+    else
+    {
+        TowerOfHanoi(diskCount, &threeRods[0], &threeRods[1], &threeRods[2], threeRods, threeRodsVisualCoords);
     }
     getch();
 }
