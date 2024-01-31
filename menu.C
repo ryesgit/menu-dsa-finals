@@ -2095,7 +2095,7 @@ int runFactorial()
     value = factorial(number);
 
     g(20, 12);
-    printf("Factorial of %d is %ld\n", number, value);
+    printf("\nFactorial of %d is %ld\n", number, value);
 
     promptBeforeExit();
 
