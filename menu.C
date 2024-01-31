@@ -1961,12 +1961,12 @@ void towerOfHanoi()
     clrscr();
     // Add all disks to first rod initially
     textcolor(WHITE);
-    cprintf("How many disks should there be? ");
-    while (scanf("%i", &diskCount) != 1)
+    cprintf("How many disks should there be? (max of 7, min of 1): ");
+    while (scanf("%i", &diskCount) != 1 || diskCount > 7 || diskCount < 1)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (max of 7, min of 1): ");
     }
     // [ rod1, rod2, rod3]
     threeRods = createThreeRods(diskCount);
