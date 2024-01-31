@@ -1206,7 +1206,7 @@ int pop(carStack *stack)
 int popByIndex(carStack *stack, int indexToRemove)
 {
     int valueToRemove = stack->cars[indexToRemove];
-    while (stack->top != indexToRemove - 2)
+    while (stack->top > indexToRemove - 2)
     {
         pop(stack);
     }
@@ -2178,18 +2178,17 @@ void main()
         p("What do you want to do?\n");
         p("1. Binary Tree\n");
         p("2. Tic Tac Toe\n");
-        p("3. Car Link\n");
-        p("4. Square Cubed\n");
-        p("5. Maze\n");
-        p("6. Graph\n");
-        p("7. Car Queue\n");
-        p("8. Car Stack\n");
-        p("9. Binary Search Tree\n");
-        p("10. Fibonacci\n");
-        p("11. Tower of Hanoi\n");
-        p("12. Factorial\n");
-        p("13. Clock/Timer\n");
-        p("15. Exit Program\n");
+        p("3. Square Cubed\n");
+        p("4. Maze\n");
+        p("5. Graph\n");
+        p("6. Car Queue\n");
+        p("7. Car Stack\n");
+        p("8. Binary Search Tree\n");
+        p("9. Fibonacci\n");
+        p("10. Tower of Hanoi\n");
+        p("11. Factorial\n");
+        p("12. Clock/Timer\n");
+        p("13. Exit Program\n");
         p("Your choice: ");
 
         while (scanf("%i", &choice) != 1)
@@ -2208,41 +2207,36 @@ void main()
             ticTacToe();
             break;
         case 3:
-            carLink();
-            break;
-        case 4:
             squareCubed();
             break;
-        case 5:
+        case 4:
             maze();
             break;
-        case 6:
+        case 5:
             graph();
             break;
-        case 7:
+        case 6:
             carQueue();
             break;
-        case 8:
+        case 7:
             playCarStack();
             break;
-        case 9:
+        case 8:
             searchTree();
             break;
-        case 10:
+        case 9:
             fibo();
             break;
-        case 11:
+        case 10:
             towerOfHanoi();
-            textcolor(WHITE);
-            cprintf("");
             break;
-        case 12:
+        case 11:
             runFactorial();
             break;
-        case 13:
+        case 12:
             clockProgram();
             break;
-        case 15:
+        case 13:
             quit = 1;
             break;
         default:
