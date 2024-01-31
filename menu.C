@@ -1917,12 +1917,12 @@ void askForDiskLengths(int diskCount, int *diskLengths)
     for (i = 0; i < diskCount; i++)
     {
         int input;
-        cprintf("Length of disk #%i: ", i + 1);
-        while (scanf("%i", &input) != 1)
+        cprintf("Length of disk #%i (max of 15, min of 1): ", i + 1);
+        while (scanf("%i", &input) != 1 || input > 15 || input < 1)
         {
             while (getchar() != '\n')
                 ; // clear the input buffer
-            p("Invalid input. Please enter an integer: ");
+            p("Invalid input. Please enter an integer (max of 15, min of 1): ");
         }
         diskLengths[i] = input;
     }
