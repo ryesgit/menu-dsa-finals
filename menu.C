@@ -2070,12 +2070,20 @@ void towerOfHanoi()
 
 // Factorial
 
+#define FACTORIAL_SIZE 1000
+long factorialArray[FACTORIAL_SIZE];
+
 long factorial(int n)
 {
     if (n == 0)
         return 1;
+    if (factorialArray[n])
+        return factorialArray[n];
     else
-        return (n * factorial(n - 1));
+    {
+        factorialArray[n] = n * factorial(n - 1);
+        return factorialArray[n];
+    }
 }
 
 int runFactorial()
@@ -2084,12 +2092,12 @@ int runFactorial()
     long value;
     clrscr();
     g(20, 10);
-    printf("Enter a number: ");
-    while (scanf("%d", &number) != 1)
+    printf("Enter a number (max of 16): ");
+    while (scanf("%d", &number) != 1 || number > 16)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        p("Invalid input. Please enter an integer: ");
+        p("Invalid input. Please enter an integer (max of 16): ");
     }
 
     value = factorial(number);
