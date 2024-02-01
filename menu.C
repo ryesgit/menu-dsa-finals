@@ -2,13 +2,19 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <ctype.h>
+#include <graphics.h>
 #define p printf
 #define s scanf
 #define g gotoxy
 #define c cprintf
 #define MAX_CARS 5
 #define SIZE 10
+#define GREEN 2
+#define RED 4
+#define BLUE 1
+#define YELLOW 14
+#define MAGENTA 5
+#define DARKGRAY 8
 
 typedef struct
 {
@@ -16,11 +22,127 @@ typedef struct
     int y;
 } Coords;
 
-typedef struct
+void ensquare(int x, int y, int length, int height, char *text)
 {
-    char marker;
-    int playerNumber;
-} Player;
+    int i, j;
+    g(x, y);
+    p("%c", 201);
+    for (i = 0; i < length; i++)
+    {
+        p("%c", 205);
+    }
+    p("%c", 187);
+    for (j = 0; j < height; j++)
+    {
+        g(x, y + j + 1);
+        p("%c", 186);
+        for (i = 0; i < length; i++)
+        {
+            p(" ");
+        }
+        p("%c", 186);
+    }
+    g(x, y + j + 1);
+    p("%c", 200);
+    for (i = 0; i < length; i++)
+    {
+        p("%c", 205);
+    }
+    p("%c", 188);
+    g(x + 15, y + 1);
+    p("%s", text);
+}
+
+void loadingScreenForNonGraphical()
+{
+    int x, y, i, j;
+
+    int color[] = {RED, GREEN, BLUE, YELLOW, MAGENTA};
+    int gdriver = DETECT, gmode, errorcode;
+    initgraph(&gdriver, &gmode, "C:\\TurboC3\\BGI");
+
+    // rainbow
+    x = getmaxx() / 2;
+    y = (300) / 2;
+    for (i = 80; i < 150; i++)
+    {
+        sound(i * 100);
+        delay(30);
+        nosound();
+        j = i / 5 - 100;
+        setcolor(color[j % 5]);
+        arc(x, y, 0, 180, i - 10);
+    }
+    // LOADING...
+    setcolor(WHITE);
+    for (i = 35; i < 550; i++)
+    {
+        line(20 + i, 170, 20 + i, 200);
+    }
+
+    for (i = 35; i < 550; i++)
+    {
+        setcolor(DARKGRAY);
+        line(20 + i, 169, 20 + i, 199);
+        delay(2);
+
+        setcolor(WHITE);
+        settextstyle(SMALL_FONT, 0, 16);
+        outtextxy(220, 220, "LOADING");
+        delay(3);
+
+        setcolor(rand() % 16);
+        settextstyle(SMALL_FONT, HORIZ_DIR, 16);
+        outtextxy(390, 220, "...");
+        delay(3);
+    }
+    closegraph();
+}
+
+void loadingScreenForGraphical()
+{
+    int x, y, i, j;
+
+    int color[] = {RED, GREEN, BLUE, YELLOW, MAGENTA};
+    int gdriver = DETECT, gmode, errorcode;
+    initgraph(&gdriver, &gmode, "C:\\TurboC3\\BGI");
+
+    // rainbow
+    x = getmaxx() / 2;
+    y = (300) / 2;
+    for (i = 80; i < 150; i++)
+    {
+        sound(i * 100);
+        delay(30);
+        nosound();
+        j = i / 5 - 100;
+        setcolor(color[j % 5]);
+        arc(x, y, 0, 180, i - 10);
+    }
+    // LOADING...
+    setcolor(WHITE);
+    for (i = 35; i < 550; i++)
+    {
+        line(20 + i, 170, 20 + i, 200);
+    }
+
+    for (i = 35; i < 550; i++)
+    {
+        setcolor(DARKGRAY);
+        line(20 + i, 169, 20 + i, 199);
+        delay(2);
+
+        setcolor(WHITE);
+        settextstyle(SMALL_FONT, 0, 16);
+        outtextxy(220, 220, "LOADING");
+        delay(3);
+
+        setcolor(rand() % 16);
+        settextstyle(SMALL_FONT, HORIZ_DIR, 16);
+        outtextxy(390, 220, "...");
+        delay(3);
+    }
+}
 
 // Draw line n times
 // After first line, switch to vertical lines and draw n times.
@@ -32,7 +154,7 @@ typedef struct
 void graph()
 {
     int x, y, cpe, ce, ece, ee, me, ie, rem;
-
+    loadingScreenForNonGraphical();
     clrscr();
     // screen
     for (x = 1; x <= 40; x++)
@@ -105,7 +227,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 8);
     }
@@ -114,7 +236,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 9);
     }
@@ -123,7 +245,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 10);
     }
@@ -132,7 +254,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 11);
     }
@@ -141,7 +263,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 12);
     }
@@ -150,7 +272,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 13);
     }
@@ -159,7 +281,7 @@ void graph()
     {
         while (getchar() != '\n')
             ; // clear the input buffer
-        g(1, 1);
+        g(5, 22);
         p("Invalid input. Please enter an integer (<= 30): ");
         g(22, 14);
     }
@@ -297,34 +419,183 @@ int writeNTimes(int x, int y, int length, int n, int horizontal, int backwards)
     return y;
 }
 
-void maze()
+int maze()
 {
-
-    // g(column, row)
-    int i;
-    int length = 23;
-    int y = 1;
-    int x = 30;
-
+    int x, y, i, j;
+    loadingScreenForGraphical();
     clrscr();
-    // for(i = length; i >= 0; i--) {
-    //     for(j = 0; j < 3; j++) {
-    //         writeNTimes(x, y, i, j, horizontal, backwards);
-    //     }
-    // }
-
-    // writeNTimes(int x, int y, int length, int n, int horizontal, int backwards)
-
-    for (i = length; i >= 0; i--)
+    // 1st loop
+    for (x = 1; x <= 79; x++)
     {
-        x = writeNTimes(x + 1, y, i, 1, 1, 0);
-        y = writeNTimes(x, y, i, 1, 0, 0);
-        x = writeNTimes(x, y, i, 1, 1, 1);
-        i = i - 2;
-        y = writeNTimes(x, y, i, 1, 0, 1);
+        g(x, 1);
+        delay(25);
+        p("%c", 219);
+    }
+    for (y = 1; y <= 24; y++)
+    {
+        g(79, y);
+        delay(25);
+        p("%c", 219);
     }
 
-    promptBeforeExit();
+    for (x = 79; x >= 1; x--)
+    {
+        g(x, 24);
+        delay(25);
+        p("%c", 219);
+    }
+    for (y = 24; y >= 3; y--)
+    {
+        g(1, y);
+        delay(25);
+        p("%c", 219);
+    }
+    // 2nd loop
+    for (x = 1; x <= 77; x++)
+    {
+        g(x, 3);
+        delay(25);
+        p("%c", 219);
+    }
+    for (y = 3; y <= 22; y++)
+    {
+        g(77, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (x = 77; x >= 3; x--)
+    {
+        g(x, 22);
+        delay(25);
+        p("%c", 219);
+    }
+    for (y = 22; y >= 5; y--)
+    {
+        g(3, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    // 3rd loop
+    for (x = 4; x <= 73; x++)
+    {
+        g(x, 5);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 6; y <= 20; y++)
+    {
+        g(73, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (x = 73; x >= 7; x--)
+    {
+        g(x, 20);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 20; y >= 7; y--)
+    {
+        g(7, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    // 4th loop
+    for (x = 7; x <= 70; x++)
+    {
+        g(x, 7);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 7; y <= 18; y++)
+    {
+        g(70, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (x = 70; x >= 10; x--)
+    {
+        g(x, 18);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 18; y >= 9; y--)
+    {
+        g(10, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    // 5th loop
+    for (x = 10; x <= 67; x++)
+    {
+        g(x, 9);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 10; y <= 16; y++)
+    {
+        g(67, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (x = 67; x >= 13; x--)
+    {
+        g(x, 16);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 16; y >= 11; y--)
+    {
+        g(13, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    // 6th loop
+    for (x = 13; x <= 64; x++)
+    {
+        g(x, 11);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 12; y <= 14; y++)
+    {
+        g(64, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (x = 64; x >= 16; x--)
+    {
+        g(x, 14);
+        delay(25);
+        p("%c", 219);
+    }
+
+    for (y = 14; y >= 13; y--)
+    {
+        g(16, y);
+        delay(25);
+        p("%c", 219);
+    }
+
+    getch();
+    closegraph();
+    return 0;
 }
 
 void squareCubed()
@@ -332,7 +603,9 @@ void squareCubed()
     int x, qty;
     char items[15];
     float uprice, amount, totalamount;
+    loadingScreenForNonGraphical();
     clrscr();
+    ensquare(0, 0, 76, 24, "");
     g(5, 2);
     p("N");
 
@@ -367,6 +640,7 @@ char mark;
 
 int ticTacToe()
 {
+    loadingScreenForNonGraphical();
     clrscr();
     textcolor(YELLOW);
 
@@ -595,6 +869,7 @@ void carLink()
 {
     LinkedList *carList = (LinkedList *)malloc(sizeof(LinkedList));
     int inProgress = 1;
+    loadingScreenForNonGraphical();
     deleteAllCars(carList);
 
     clrscr();
@@ -802,11 +1077,11 @@ void binaryTree()
     queue.node = &root;
     queue.next = NULL;
     root.coords = rootInitialCoords;
-
+    loadingScreenForNonGraphical();
     clrscr();
     presentNodes = 0;
-
-    p("Number of levels (Maximum of 4): \n");
+    g(2, 3);
+    p("Number of levels (Maximum of 4):");
     while (scanf("%i", &numberOfLevels) != 1 || numberOfLevels > 4)
     {
         while (getchar() != '\n')
@@ -815,107 +1090,108 @@ void binaryTree()
     }
 
     nodes = getNumberOfNodes(numberOfLevels);
+    g(2, 6);
     p("Number of nodes: %i\n", nodes);
 
-    p("Value of root node: ");
-    s("%s", &rootValue);
-
-    strcpy(root.value, rootValue);
-
-    currentNode = &root;
-    presentNodes++;
-
-    gotoxy(currentNode->coords.x, currentNode->coords.y);
-    p("%s", currentNode->value);
-
-    while (presentNodes <= nodes - 1)
+    if (!(nodes <= 0))
     {
-        coords newNodeCoords;
+        p("Value of root node: ");
+        s("%s", &rootValue);
 
-        if (currentNode->value[0] == '.')
+        strcpy(root.value, rootValue);
+
+        currentNode = &root;
+        presentNodes++;
+
+        gotoxy(currentNode->coords.x, currentNode->coords.y);
+        p("%s", currentNode->value);
+        while (presentNodes <= nodes - 1)
         {
+            coords newNodeCoords;
 
-            currentNodeCoords = currentNode->coords;
-            while (currentNode->left == NULL || currentNode->right == NULL)
+            if (currentNode->value[0] == '.')
             {
-                int level = getLevel(presentNodes);
+
+                currentNodeCoords = currentNode->coords;
+                while (currentNode->left == NULL || currentNode->right == NULL)
+                {
+                    int level = getLevel(presentNodes);
+                    if (isLeft(presentNodes + 1) == 1)
+                    {
+                        newNodeCoords.x = currentNodeCoords.x - (10 / level);
+                        newNodeCoords.y = currentNodeCoords.y + 5;
+                        gotoxy(newNodeCoords.x, newNodeCoords.y);
+
+                        // Simulate input
+                        p(".");
+                        addTree(currentNode, ".", &newNodeCoords);
+
+                        enqueue(&queue, currentNode->left);
+                        presentNodes++;
+                    }
+                    else
+                    {
+                        newNodeCoords.x = currentNodeCoords.x + (10 / level);
+                        newNodeCoords.y = currentNodeCoords.y + 5;
+                        gotoxy(newNodeCoords.x, newNodeCoords.y);
+
+                        p(".");
+                        addTree(currentNode, ".", &newNodeCoords);
+
+                        enqueue(&queue, currentNode->right);
+                        presentNodes++;
+                    }
+                }
+            }
+
+            if (currentNode->left == NULL || currentNode->right == NULL)
+            {
+                // p("Value for node #%i", presentNodes);
+                currentNodeCoords = currentNode->coords;
+                gotoxy(1, 1);
+                level = getLevel(presentNodes);
                 if (isLeft(presentNodes + 1) == 1)
                 {
                     newNodeCoords.x = currentNodeCoords.x - (10 / level);
                     newNodeCoords.y = currentNodeCoords.y + 5;
                     gotoxy(newNodeCoords.x, newNodeCoords.y);
-
-                    // Simulate input
-                    p(".");
-                    addTree(currentNode, ".", &newNodeCoords);
-
-                    enqueue(&queue, currentNode->left);
-                    presentNodes++;
                 }
                 else
                 {
                     newNodeCoords.x = currentNodeCoords.x + (10 / level);
                     newNodeCoords.y = currentNodeCoords.y + 5;
                     gotoxy(newNodeCoords.x, newNodeCoords.y);
-
-                    p(".");
-                    addTree(currentNode, ".", &newNodeCoords);
-
-                    enqueue(&queue, currentNode->right);
-                    presentNodes++;
                 }
+                s(" %s", &value);
+                addTree(currentNode, value, &newNodeCoords);
+                presentNodes++;
+                continue;
             }
+            enqueue(&queue, currentNode->left);
+            enqueue(&queue, currentNode->right);
+            currentNode = dequeue(&queue);
         }
 
-        if (currentNode->left == NULL || currentNode->right == NULL)
-        {
-            // p("Value for node #%i", presentNodes);
-            currentNodeCoords = currentNode->coords;
-            gotoxy(1, 1);
-            level = getLevel(presentNodes);
-            if (isLeft(presentNodes + 1) == 1)
-            {
-                newNodeCoords.x = currentNodeCoords.x - (10 / level);
-                newNodeCoords.y = currentNodeCoords.y + 5;
-                gotoxy(newNodeCoords.x, newNodeCoords.y);
-            }
-            else
-            {
-                newNodeCoords.x = currentNodeCoords.x + (10 / level);
-                newNodeCoords.y = currentNodeCoords.y + 5;
-                gotoxy(newNodeCoords.x, newNodeCoords.y);
-            }
-            s(" %s", &value);
-            addTree(currentNode, value, &newNodeCoords);
-            presentNodes++;
-            continue;
-        }
-        enqueue(&queue, currentNode->left);
-        enqueue(&queue, currentNode->right);
-        currentNode = dequeue(&queue);
+        p("\n");
+        p("Preorder: \n");
+        preOrder(&root);
+        p("\n");
+        p("Postorder: \n");
+        postOrder(&root);
+        p("\n");
+        p("Inorder: \n");
+        inOrder(&root);
+        p("\n");
     }
 
-    p("\n");
-    p("Preorder: \n");
-    preOrder(&root);
-    p("\n");
-    p("Postorder: \n");
-    postOrder(&root);
-    p("\n");
-    p("Inorder: \n");
-    inOrder(&root);
-    p("\n");
-
-    // p("Thank you! Program will automatically terminate in 5 seconds");
-    // delay(5000);
-    // clrscr();
-    promptBeforeExit();
+    getch();
 }
 
 int promptBeforeExit()
 {
     int keystroke;
-    p("\nFinally, press F to terminate program");
+    g(23, 19);
+    p("Finally, press F to terminate program");
 
     keystroke = getch();
 
@@ -1060,6 +1336,7 @@ int carQueue()
     int carNumber, ch;
     int scanfResult;
     int quit = 0;
+    loadingScreenForNonGraphical();
     do
     {
         clrscr();
@@ -1113,7 +1390,7 @@ int carQueue()
             scanfResult = s("%d", &carNumber);
             sleep(1);
 
-            if (!isValidCarNumber(carNumber))
+            if (!isValidCarNumber(carNumber) || scanfResult != 1 || (carNumber <= 0 || carNumber > 9))
             {
                 clrscr();
                 g(19, 11);
@@ -1282,7 +1559,7 @@ void playCarStack()
 {
     int inProgress = 1;
     carStack stack;
-
+    loadingScreenForNonGraphical();
     initializeCarStack(&stack);
     while (inProgress == 1)
     {
@@ -1458,9 +1735,10 @@ void searchTree()
     int numberCount;
     struct STNode root;
     struct Tree binaryTree;
+    loadingScreenForNonGraphical();
     clrscr();
-    printf("How many numbers will you input?\n");
-    while (scanf("%i", &numberCount) != 1)
+    printf("How many numbers will you input? (min of 1, max of 13)\n");
+    while (scanf("%i", &numberCount) != 1 || numberCount < 1 || numberCount > 13)
     {
         while (getchar() != '\n')
             ; // clear the input buffer
@@ -1478,7 +1756,7 @@ void searchTree()
     root.left = NULL;
     root.right = NULL;
     root.coords.x = 40;
-    root.coords.y = 5;
+    root.coords.y = 10;
     root.depth = 1;
     fillNumbers(&binaryTree, numberCount);
     printTree(&binaryTree);
@@ -1600,7 +1878,7 @@ int fibo()
             clrscr();
             continue;
         }
-        else if (input > 33)
+        else if (input > 48)
         {
             sleep(1);
             g(14, 10);
@@ -1649,11 +1927,6 @@ int fibo()
 
 #define p printf
 #define g gotoxy
-#define GREEN 2
-#define RED 4
-#define BLUE 1
-#define YELLOW 14
-#define MAGENTA 5
 
 struct Disk
 {
@@ -1958,6 +2231,7 @@ void towerOfHanoi()
     // Assign first rod to remove elements to as first rod.
     struct Rod *lastRod;
     struct HCoords *threeRodsVisualCoords;
+    loadingScreenForNonGraphical();
     clrscr();
     // Add all disks to first rod initially
     textcolor(WHITE);
@@ -2073,7 +2347,7 @@ void towerOfHanoi()
 #define FACTORIAL_SIZE 1000
 long factorialArray[FACTORIAL_SIZE];
 
-long factorial(int n)
+long long factorial(int n)
 {
     if (n == 0)
         return 1;
@@ -2089,23 +2363,94 @@ long factorial(int n)
 int runFactorial()
 {
     int number;
-    long value;
+    long long value;
+    char choice;
+    loadingScreenForNonGraphical();
     clrscr();
-    g(20, 10);
-    printf("Enter a number (max of 16): ");
-    while (scanf("%d", &number) != 1 || number > 16)
+    do
     {
-        while (getchar() != '\n')
-            ; // clear the input buffer
-        p("Invalid input. Please enter an integer (max of 16): ");
-    }
+        while (1)
+        {
+            g(12, 3);
+            p("========================================================");
+            g(12, 4);
+            p("|                 FACTORIAL CALCULATOR                 |");
+            g(12, 5);
+            p("========================================================");
 
-    value = factorial(number);
+            g(12, 7);
+            p(" Type the number you want to find the factorial (0-12) ");
+            g(12, 9);
+            p(" Enter the number:  ");
+            if (s("%d", &number) != 1)
+            {
+                g(13, 10);
+                p("[ERROR] Invalid input. Please enter a valid integer.\n");
+                while (getchar() != '\n')
+                    ;
+                sleep(2);
+                clrscr();
+                continue;
+            }
+            else if (number < 0)
+            {
+                g(13, 10);
+                p("[ERROR] Please enter a non-negative integer.\n");
+                sleep(2);
+                clrscr();
+                continue;
+            }
+            else if (number > 12)
+            {
+                g(13, 10);
+                p("[ERROR] The program cannot perform the calculation.\n");
+                sleep(2);
+                clrscr();
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+        while (number < 0 || getchar() != '\n')
+            ;
+        g(13, 10);
+        p("Calculating....");
+        sleep(1);
+        value = factorial(number);
+        g(13, 12);
+        p("Factorial of %d is:  %llu\n\n", number, value);
+        sleep(1);
 
-    g(20, 12);
-    printf("\nFactorial of %d is %ld\n", number, value);
+        while (1)
+        {
+            p("            Do you want to calculate again (Y/N)?  ");
+            s(" %c", &choice);
 
-    promptBeforeExit();
+            if (choice == 'Y' || choice == 'y' || choice == 'N' || choice == 'n')
+            {
+                sleep(1);
+                clrscr();
+                break;
+            }
+            else
+            {
+                p("            [ERROR] Invalid choice. Please enter either Y or N.\n\n");
+                while (getchar() != '\n')
+                    ;
+            }
+        }
+
+        if (choice == 'N' || choice == 'n')
+        {
+            g(19, 12);
+            p("Thank you for using Factorial Calculator.\n");
+            break;
+        }
+
+    } while (choice == 'Y' || choice == 'y');
+    getch();
 
     return 0;
 }
@@ -2131,7 +2476,7 @@ void printLargerText(const char *text)
 void clockProgram()
 {
     int i, j, k;
-
+    loadingScreenForNonGraphical();
     for (i = 0; i <= 24; i++)
     {
         for (j = 0; j <= 59; j++)
@@ -2139,12 +2484,15 @@ void clockProgram()
             for (k = 0; k <= 59; k++)
             {
                 clrscr();
-                printLargerText(" ");
-                printf("\t\t\t\t    %02d:%02d:%02d", i, j, k);
-                printLargerText(" ");
-                printf("\t\t\t  Press 'q' to quit\n");
-                printf("\t\t\t  Press 'p' to pause\n");
-                printf("\t\t\t  Press 'r' to reset the clock\n");
+                ensquare(2, 3, 76, 24, "");
+                g(36, 10);
+                printf("%02d:%02d:%02d", i, j, k);
+                g(28, 11);
+                printf("Press 'q' to quit\n");
+                g(28, 12);
+                printf("Press 'p' to pause\n");
+                g(28, 13);
+                printf("Press 'r' to reset the clock\n");
                 delay(1000);
 
                 if (kbhit())
@@ -2182,21 +2530,40 @@ void main()
     quit = 0;
     while (!quit)
     {
+        int g_value = 5;
         clrscr();
+        ensquare(1, 1, 78, 24, "");
+        ensquare(1, 1, 78, 3, "Welcome to Data Structures and Algorithm Programs Menu");
+        g(30, g_value++);
         p("What do you want to do?\n");
+        g_value++;
+        g(30, g_value++);
         p("1. Binary Tree\n");
+        g(30, g_value++);
         p("2. Tic Tac Toe\n");
+        g(30, g_value++);
         p("3. Square Cubed\n");
+        g(30, g_value++);
         p("4. Maze\n");
+        g(30, g_value++);
         p("5. Graph\n");
+        g(30, g_value++);
         p("6. Car Queue\n");
+        g(30, g_value++);
         p("7. Car Stack\n");
+        g(30, g_value++);
         p("8. Binary Search Tree\n");
+        g(30, g_value++);
         p("9. Fibonacci\n");
+        g(30, g_value++);
         p("10. Tower of Hanoi\n");
+        g(30, g_value++);
         p("11. Factorial\n");
+        g(30, g_value++);
         p("12. Clock/Timer\n");
+        g(30, g_value++);
         p("13. Exit Program\n");
+        g(30, g_value++);
         p("Your choice: ");
 
         while (scanf("%i", &choice) != 1)
